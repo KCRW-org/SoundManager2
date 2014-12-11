@@ -171,21 +171,32 @@ package {
             this.ns.receiveAudio(true);
             this.addNetstreamEvents();
             this.connected = true;
-            // RTMP-only
-            if (this.serverUrl && this.useEvents) {
-              var responder:Responder = new Responder(rtmpResponder);
-              // call a method on server to get the length of the stream (like onMetaData, but Flash Media Server-specific)
-              // Red5 and other RTMP servers appear to provide duration via onMetaData event(s) in the stream.
-              // http://help.adobe.com/en_US/FlashMediaServer/3.5_Deving/WS5b3ccc516d4fbf351e63e3d11a0773d117-7ffe.html
-              nc.call('getStreamLength', responder, this.sURL);
-              writeDebug('NetConnection: connected');
-              writeDebug('firing _onconnect for '+this.sID);
-              ExternalInterface.call(this.sm.baseJSObject + "['" + this.sID + "']._onconnect", 1);
-            }
           } catch(e: Error) {
             this.failed = true;
             writeDebug('netStream error: ' + e.toString());
             ExternalInterface.call(baseJSObject + "['" + this.sID + "']._onfailure", 'Connection failed!', event.info.level, event.info.code);
+          }
+          // RTMP-only
+          if (this.serverUrl && this.useEvents) {
+            var responder:Responder = new Responder(rtmpResponder);
+            // call a method on server to get the length of the stream (like onMetaData, but Flash Media Server-specific)
+            // Red5 and other RTMP servers appear to provide duration via onMetaData event(s) in the stream.
+            // http://help.adobe.com/en_US/FlashMediaServer/3.5_Deving/WS5b3ccc516d4fbf351e63e3d11a0773d117-7ffe.html
+            try {
+              nc.call('getStreamLength', responder, this.sURL);
+            } catch(e: Error) {
+              writeDebug('netStream warning: ' + e.toString());
+              ExternalInterface.call(baseJSObject + "['" + this.sID + "']._onwarning", 'getStreamLength failed.', event.info.level, event.info.code);
+            }
+            try {
+              nc.call('FCSubscribe', null, this.sURL);
+            } catch(e: Error) {
+              writeDebug('netStream warning: ' + e.toString());
+              ExternalInterface.call(baseJSObject + "['" + this.sID + "']._onwarning", 'FCSubscribe failed', event.info.level, event.info.code);
+            }
+            writeDebug('NetConnection: connected');
+            writeDebug('firing _onconnect for '+this.sID);
+            ExternalInterface.call(this.sm.baseJSObject + "['" + this.sID + "']._onconnect", 1);
           }
           break;
 
@@ -460,8 +471,16 @@ writeDebug('waiting for next call...');
     // Handle FMS bandwidth check callback.
     // @see http://www.adobe.com/devnet/flashmediaserver/articles/dynamic_stream_switching_04.html
     // @see http://www.johncblandii.com/index.php/2007/12/fms-a-quick-fix-for-missing-onbwdone-onfcsubscribe-etc.html
-    public function onBWDone() : void {
-      // writeDebug('onBWDone: called and ignored');
+    public function onBWDone(...rest) : void {
+      var p_bw:Number;
+      if (rest.length > 0) {
+        p_bw = rest[0];
+      }
+      writeDebug("onBWDone: bandwidth = " + p_bw + " Kbps.");
+    }
+
+    public function onFCSubscribe(info:Object) : void {
+      writeDebug("onFCSubscribe: successful");
     }
 
     // NetStream client callback. Invoked when the song is complete.
