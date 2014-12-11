@@ -259,6 +259,7 @@ soundManager.setup({
      <li><a href="#smsound-position">position</a></li>
      <li title="Flash 9+ only" class="flash9"><a href="#smsound-serverurl">serverURL</a></li>
      <li>stream</li>
+     <li title="Flash 9+ only" class="flash9"><a href="#smsound-peakdata">subscribe</a></li>
      <li><a href="#smsound-to">to</a></li>
      <li><a href="#smsound-type">type</a></li>
      <li><a href="#smsound-url">url</a></li>
@@ -1432,6 +1433,19 @@ for (prop in this.id3) {
   url: 'mysong.mp3' <span><span>// path to stream</span></span>
 }</span>).play();</code></pre></dd>
 						   </dl>
+
+                           <dl id="smsound-subscribe" class="f-block s-subscribe">
+                            <dt>subscribe</dt>
+                            <dd><b>Note: <em>Experimental feature.</em></b> Only for use with RTMP streaming, ie., Flash Media Server and similar servers.</dd>
+                            <dd>Boolean value (default: <code>false</code>) which instructs Flash to call the FCSubscribe on the RTMP server after connecting.  This is needed for some RTMP proxies used by common CDN services (Limelight, Edgecast, etc.)</dd>
+                            <dd>Example:
+<pre class="block"><code>soundManager.createSound({<span>
+  id: 'mySound',
+  serverURL: 'rtmp://localhost/rtmpDemo/', <span><span>// RTMP server</span></span>
+  url: 'mysong.mp3', <span><span>// path to stream</span></span>
+  subscribe: true <span><span>// Enable FCSubscribe call on RTMP proxy</span></span>
+}</span>).play();</code></pre></dd>
+                           </dl>
 
 						   <dl id="smsound-usepolicyfile" class="f-block s-usepolicyfile">
 						   <dt>usePolicyFile</dt>
