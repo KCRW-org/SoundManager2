@@ -165,6 +165,12 @@ function SoundManager(smURL, smID) {
       'required': true
     },
 
+    'm3u8': {
+      'related': ['m3u', 'mpegurl'],
+      'type': ['application/x-mpegurl; codecs="mp3"', 'application/x-mpegurl', 'audio/mpegurl', 'application/vnd.apple.mpegURL'],
+      'required': false
+    },
+
     'mp4': {
       'related': ['aac','m4a','m4b'], // additional formats under the MP4 container
       'type': ['audio/mp4; codecs="mp4a.40.2"', 'audio/aac', 'audio/x-m4a', 'audio/MP4A-LATM', 'audio/mpeg4-generic'],
