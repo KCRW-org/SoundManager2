@@ -75,7 +75,8 @@ function SoundManager(smURL, smID) {
     'useWaveformData': false,
     'useEQData': false,
     'onbufferchange': null,
-    'ondataerror': null
+    'ondataerror': null,
+    'subscribe': false
   };
   this.movieStarOptions = {
     'bufferTime': 3,
@@ -1550,6 +1551,9 @@ function SoundManager(smURL, smID) {
       s.connected = bSuccess;
       if (bSuccess) {
         s.failures = 0;
+        if (s._iO.subscribe) {
+          flash._subscribe(s.id);
+        }
         if (idCheck(s.id)) {
           if (s.getAutoPlay()) {
             s.play(_undefined, s.getAutoPlay());
