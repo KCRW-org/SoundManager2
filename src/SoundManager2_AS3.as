@@ -125,6 +125,7 @@ package {
           ExternalInterface.addCallback('_createSound', _createSound);
           ExternalInterface.addCallback('_destroySound', _destroySound);
           ExternalInterface.addCallback('_setAutoPlay', _setAutoPlay);
+          ExternalInterface.addCallback('_subscribe', _subscribe);
         } catch(e: Error) {
           flashDebug('Fatal: ExternalInterface error: ' + e.toString());
         }
@@ -180,6 +181,13 @@ package {
       var s: SoundManager2_SMSound_AS3 = soundObjects[sID];
       if (s) {
         s.setAutoPlay(autoPlay);
+      }
+    }
+
+    public function _subscribe(sID:String) : void {
+      var s: SoundManager2_SMSound_AS3 = soundObjects[sID];
+      if (s) {
+        s.subscribe();
       }
     }
 

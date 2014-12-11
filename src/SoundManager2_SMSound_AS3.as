@@ -188,12 +188,6 @@ package {
               writeDebug('netStream warning: ' + e.toString());
               ExternalInterface.call(baseJSObject + "['" + this.sID + "']._onwarning", 'getStreamLength failed.', event.info.level, event.info.code);
             }
-            try {
-              nc.call('FCSubscribe', null, this.sURL);
-            } catch(e: Error) {
-              writeDebug('netStream warning: ' + e.toString());
-              ExternalInterface.call(baseJSObject + "['" + this.sID + "']._onwarning", 'FCSubscribe failed', event.info.level, event.info.code);
-            }
             writeDebug('NetConnection: connected');
             writeDebug('firing _onconnect for '+this.sID);
             ExternalInterface.call(this.sm.baseJSObject + "['" + this.sID + "']._onconnect", 1);
@@ -249,6 +243,15 @@ package {
           break;
       }
 
+    }
+
+    public function subscribe() : void {
+      try {
+        nc.call('FCSubscribe', null, this.sURL);
+      } catch(e: Error) {
+        writeDebug('netStream warning: ' + e.toString());
+        ExternalInterface.call(baseJSObject + "['" + this.sID + "']._onwarning", 'FCSubscribe failed');
+      }
     }
 
     public function writeDebug (s: String, logLevel: Number = 0) : Boolean {

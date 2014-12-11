@@ -134,7 +134,8 @@ function SoundManager(smURL, smID) {
     'useWaveformData': false, // enable sound spectrum (raw waveform data) - NOTE: May increase CPU load.
     'useEQData': false,       // enable sound EQ (frequency spectrum data) - NOTE: May increase CPU load.
     'onbufferchange': null,   // callback for "isBuffering" property change
-    'ondataerror': null       // callback for waveform/eq data access error (flash playing audio in other tabs/domains)
+    'ondataerror': null,      // callback for waveform/eq data access error (flash playing audio in other tabs/domains)
+    'subscribe': false        // Call FSubscribe on flash RTMP server before playing, needed for CDN support
 
   };
 
@@ -3417,6 +3418,10 @@ function SoundManager(smURL, smID) {
       if (bSuccess) {
 
         s.failures = 0;
+
+        if (s._iO.subscribe) {
+          flash._subscribe(s.id);
+        }
 
         if (idCheck(s.id)) {
           if (s.getAutoPlay()) {
